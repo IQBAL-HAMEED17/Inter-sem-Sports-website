@@ -41,8 +41,7 @@ const Store = {
     }));
   },
   async addTournament(tournament) {
-    const { error } = await supabaseClient.from('tournaments').insert([{
-      id: tournament.id,
+    const { data, error } = await supabaseClient.from('tournaments').insert([{
       name: tournament.name,
       sport: tournament.sport,
       fee: tournament.fee,
@@ -51,8 +50,9 @@ const Store = {
       venue: tournament.venue,
       description: tournament.description,
       status: tournament.status
-    }]);
+    }]).select();
     if (error) console.error('Error adding tournament:', error);
+    return data ? data[0] : null;
   },
   async updateTournament(id, updates) {
     if (updates.registrationDeadline) {
@@ -67,8 +67,7 @@ const Store = {
     if (error) console.error('Error deleting tournament:', error);
   },
   async addRegistration(registration) {
-    const { error } = await supabaseClient.from('registrations').insert([{
-      id: registration.id,
+    const { data, error } = await supabaseClient.from('registrations').insert([{
       tournament_id: registration.tournament_id || registration.tournamentId,
       semester: registration.semester,
       team_name: registration.team_name || registration.teamName,
@@ -77,8 +76,9 @@ const Store = {
       contact_number: registration.contact_number || registration.contactNumber,
       fee_status: registration.fee_status || registration.feeStatus,
       payment_screenshot: registration.payment_screenshot || registration.paymentScreenshot
-    }]);
+    }]).select();
     if (error) console.error('Error adding registration:', error);
+    return data ? data[0] : null;
   },
   async updateRegistration(id, updates) {
     if (updates.feeStatus) updates.fee_status = updates.feeStatus;
@@ -871,9 +871,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return showToast('A team with this name is already registered for this tournament and semester.', 'error');
       }
 
-      const regId = generateId();
-      await Store.addRegistration({
-        id: regId,
+      const insertedReg = await Store.addRegistration({
         tournamentId,
         semester,
         teamName,
@@ -883,6 +881,8 @@ document.addEventListener('DOMContentLoaded', () => {
         feeStatus: 'pending',
         paymentScreenshot: null
       });
+
+      const regId = insertedReg ? insertedReg.id : null;
 
       // Get the fee for payment modal
       const allTournaments = await Store.getTournaments();
@@ -971,7 +971,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       await Store.addTournament({
-        id: generateId(),
         name: document.getElementById('tName').value.trim(),
         sport: document.getElementById('tSport').value,
         fee: parseFloat(document.getElementById('tFee').value),
