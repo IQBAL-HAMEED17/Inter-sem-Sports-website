@@ -183,9 +183,6 @@ async function renderHome() {
   document.getElementById('statApproved').textContent = approvedRegs.length;
   document.getElementById('statSemesters').textContent = uniqueSemesters;
 
-  const homeTournaments = document.getElementById('homeTournaments');
-  const homeEmpty = document.getElementById('homeEmpty');
-
   if (activeTournaments.length === 0) {
     homeTournaments.innerHTML = '';
     homeEmpty.classList.remove('hidden');
