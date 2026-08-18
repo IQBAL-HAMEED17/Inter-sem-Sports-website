@@ -358,6 +358,8 @@ async function renderRegister(preselectedTournamentId = null) {
     const selectedOpt = select.options[select.selectedIndex];
     feeAmount.textContent = selectedOpt.dataset.fee;
     feeDisplay.classList.remove('hidden');
+  }
+}
 // 10. Registrations Page Logic
 async function initRegistrationsPage() {
   const tournaments = await Store.getTournaments();
@@ -552,9 +554,6 @@ async function renderAdminRegistrationsList() {
   
   if (tFilter !== 'all') regs = regs.filter(r => r.tournamentId === tFilter);
   if (sFilter !== 'all') regs = regs.filter(r => r.feeStatus === sFilter);
-
-  const container = document.getElementById('adminRegistrationsList');
-  const empty = document.getElementById('adminRegistrationsEmpty');
 
   if (regs.length === 0) {
     container.innerHTML = '';
