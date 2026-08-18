@@ -14,13 +14,13 @@ const getSemesterLabel = (num) => {
 const isDeadlinePassed = (deadline) => new Date(deadline) < new Date();
 
 // 1. Data Store Module (Supabase)
-const supabaseUrl = 'https://lptjiaqzrbbgdzgsxrrv.supabase.co';
+const supabaseUrl = 'https://lptjiaqzrbbgdzgsxrrv.supabaseClient.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxwdGppYXF6cmJiZ2R6Z3N4cnJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcwNjk5MDAsImV4cCI6MjEwMjY0NTkwMH0.ZJ67bW4SrKHfAWWE2SvHRAxnjq6p-q2X9XYJnjcE84s';
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 const Store = {
   async getTournaments() {
-    const { data, error } = await supabase.from('tournaments').select('*');
+    const { data, error } = await supabaseClient.from('tournaments').select('*');
     if (error) console.error('Error fetching tournaments:', error);
     return (data || []).map(t => ({
       ...t,
@@ -28,7 +28,7 @@ const Store = {
     }));
   },
   async getRegistrations() {
-    const { data, error } = await supabase.from('registrations').select('*');
+    const { data, error } = await supabaseClient.from('registrations').select('*');
     if (error) console.error('Error fetching registrations:', error);
     return (data || []).map(r => ({
       ...r,
@@ -41,7 +41,7 @@ const Store = {
     }));
   },
   async addTournament(tournament) {
-    const { error } = await supabase.from('tournaments').insert([{
+    const { error } = await supabaseClient.from('tournaments').insert([{
       id: tournament.id,
       name: tournament.name,
       sport: tournament.sport,
@@ -59,15 +59,15 @@ const Store = {
       updates.registration_deadline = updates.registrationDeadline;
       delete updates.registrationDeadline;
     }
-    const { error } = await supabase.from('tournaments').update(updates).eq('id', id);
+    const { error } = await supabaseClient.from('tournaments').update(updates).eq('id', id);
     if (error) console.error('Error updating tournament:', error);
   },
   async deleteTournament(id) {
-    const { error } = await supabase.from('tournaments').delete().eq('id', id);
+    const { error } = await supabaseClient.from('tournaments').delete().eq('id', id);
     if (error) console.error('Error deleting tournament:', error);
   },
   async addRegistration(registration) {
-    const { error } = await supabase.from('registrations').insert([{
+    const { error } = await supabaseClient.from('registrations').insert([{
       id: registration.id,
       tournament_id: registration.tournament_id || registration.tournamentId,
       semester: registration.semester,
@@ -86,11 +86,11 @@ const Store = {
     delete updates.feeStatus;
     delete updates.paymentScreenshot;
 
-    const { error } = await supabase.from('registrations').update(updates).eq('id', id);
+    const { error } = await supabaseClient.from('registrations').update(updates).eq('id', id);
     if (error) console.error('Error updating registration:', error);
   },
   async deleteRegistration(id) {
-    const { error } = await supabase.from('registrations').delete().eq('id', id);
+    const { error } = await supabaseClient.from('registrations').delete().eq('id', id);
     if (error) console.error('Error deleting registration:', error);
   },
   isAdminLoggedIn() { return localStorage.getItem(ADMIN_LOGGED_IN_KEY) === 'true'; },
@@ -1027,7 +1027,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const fileExt = currentScreenshotData.name.split('.').pop();
       const fileName = `ss_${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
       
-      const { data, error } = await supabase.storage
+      const { data, error } = await supabaseClient.storage
         .from('payment_screenshots')
         .upload(fileName, currentScreenshotData);
         
@@ -1038,7 +1038,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
       
-      const { data: urlData } = supabase.storage
+      const { data: urlData } = supabaseClient.storage
         .from('payment_screenshots')
         .getPublicUrl(fileName);
 
