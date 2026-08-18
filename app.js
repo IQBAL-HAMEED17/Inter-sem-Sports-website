@@ -14,7 +14,7 @@ const getSemesterLabel = (num) => {
 const isDeadlinePassed = (deadline) => new Date(deadline) < new Date();
 
 // 1. Data Store Module (Supabase)
-const supabaseUrl = 'https://lptjiaqzrbbgdzgsxrrv.supabaseClient.co';
+const supabaseUrl = 'https://lptjiaqzrbbgdzgsxrrv.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxwdGppYXF6cmJiZ2R6Z3N4cnJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcwNjk5MDAsImV4cCI6MjEwMjY0NTkwMH0.ZJ67bW4SrKHfAWWE2SvHRAxnjq6p-q2X9XYJnjcE84s';
 const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
 
