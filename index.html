@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IT Department Sports Arena — Tournament Registration</title>
+  <meta name="description" content="Register your semester team for Football and Cricket tournaments organized by the IT Department.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container nav-container">
+    <a href="#home" class="nav-brand">🏆 IT Sports Arena</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">☰</button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home" data-page="home" class="nav-link active">Home</a></li>
+      <li><a href="#tournaments" data-page="tournaments" class="nav-link">Tournaments</a></li>
+      <li><a href="#register" data-page="register" class="nav-link">Register</a></li>
+      <li><a href="#registrations" data-page="registrations" class="nav-link">Registrations</a></li>
+      <!-- Admin hidden from nav - access via #admin URL -->
+    </ul>
+  </div>
+</nav>
+
+<section id="page-home" class="page active">
+  <!-- Hero -->
+  <div class="hero">
+    <div class="container">
+      <h1 class="hero-title">IT Department<br>Sports Arena</h1>
+      <p class="hero-subtitle">Register your semester team for the upcoming Football & Cricket tournaments. Show your skills, lead your team, claim the trophy!</p>
+      <a href="#tournaments" class="btn btn-hero" data-page="tournaments">View Tournaments →</a>
+    </div>
+  </div>
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <span class="stat-number" id="statTournaments">0</span>
+          <span class="stat-label">Active Tournaments</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" id="statTeams">0</span>
+          <span class="stat-label">Teams Registered</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" id="statApproved">0</span>
+          <span class="stat-label">Approved Teams</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" id="statSemesters">8</span>
+          <span class="stat-label">Semesters</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Active Tournaments Preview -->
+  <div class="container mt-4">
+    <div class="section-header">
+      <h2>Active Tournaments</h2>
+    </div>
+    <div class="tournament-grid" id="homeTournaments"></div>
+    <div class="empty-state hidden" id="homeEmpty">
+      <span class="empty-icon">🏟️</span>
+      <p>No active tournaments yet.</p>
+      <p class="text-light">Check back soon or contact the admin.</p>
+    </div>
+  </div>
+  <!-- Recent Registrations Feed -->
+  <div class="container mt-4">
+    <div class="section-header">
+      <h2>Recent Registrations</h2>
+    </div>
+    <div id="homeRecentRegistrations"></div>
+    <div class="empty-state hidden" id="homeRecentEmpty">
+      <span class="empty-icon">📋</span>
+      <p>No registrations yet. Be the first to register!</p>
+    </div>
+  </div>
+</section>
+
+<section id="page-tournaments" class="page">
+  <div class="container mt-4">
+    <div class="section-header">
+      <h2>All Tournaments</h2>
+    </div>
+    <div class="tournament-grid" id="allTournaments"></div>
+    <div class="empty-state hidden" id="tournamentsEmpty">
+      <span class="empty-icon">📋</span>
+      <p>No tournaments announced yet.</p>
+      <p class="text-light">The admin will announce tournaments soon.</p>
+    </div>
+  </div>
+</section>
+
+<section id="page-register" class="page">
+  <div class="container mt-4">
+    <div class="section-header">
+      <h2>Team Registration</h2>
+    </div>
+    <div class="register-card">
+      <form id="registerForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="tournamentSelect">Select Tournament *</label>
+            <select id="tournamentSelect" required>
+              <option value="">— Choose a tournament —</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="semesterSelect">Select Semester *</label>
+            <select id="semesterSelect" required>
+              <option value="">— Choose semester —</option>
+              <option value="1">1st Semester</option>
+              <option value="2">2nd Semester</option>
+              <option value="3">3rd Semester</option>
+              <option value="4">4th Semester</option>
+              <option value="5">5th Semester</option>
+              <option value="6">6th Semester</option>
+              <option value="7">7th Semester</option>
+              <option value="8">8th Semester</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="teamName">Team Name *</label>
+          <input type="text" id="teamName" placeholder="Enter your team name" required maxlength="50">
+        </div>
+        <!-- Players Section -->
+        <div class="players-section">
+          <div class="players-header">
+            <label>Players *</label>
+            <span class="player-count" id="playerCount">0 / 11</span>
+          </div>
+          <div id="playersContainer">
+            <!-- Player rows added dynamically -->
+          </div>
+          <button type="button" class="add-player-btn" id="addPlayerBtn">+ Add Player</button>
+        </div>
+        <div class="form-group">
+          <label for="captainSelect">Select Captain *</label>
+          <select id="captainSelect" required>
+            <option value="">— Add players first —</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="contactNumber">Contact Number *</label>
+          <input type="tel" id="contactNumber" placeholder="Enter contact number" required pattern="[0-9]{10}" title="Please enter a 10-digit number">
+        </div>
+        <div class="form-info">
+          <span class="info-icon">ℹ️</span>
+          <p>Registration fee will be shown after selecting a tournament. Fee approval is done manually by the admin after payment verification.</p>
+        </div>
+        <div class="fee-display hidden" id="feeDisplay">
+          <span class="fee-label">Registration Fee:</span>
+          <span class="fee-amount" id="feeAmount">₹0</span>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full" id="submitRegistration">Submit Registration</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section id="page-registrations" class="page">
+  <div class="container mt-4">
+    <div class="section-header">
+      <h2>Registrations</h2>
+    </div>
+    <div class="filter-bar">
+      <div class="form-group">
+        <select id="regFilterTournament">
+          <option value="">All Tournaments</option>
+        </select>
+      </div>
+    </div>
+    <div id="registrationsView"></div>
+    <div class="empty-state hidden" id="registrationsEmpty">
+      <span class="empty-icon">📝</span>
+      <p>No registrations yet.</p>
+    </div>
+  </div>
+</section>
+
+<section id="page-admin" class="page">
+  <!-- Login Overlay -->
+  <div class="admin-login-overlay" id="adminLoginOverlay">
+    <div class="admin-login-box">
+      <h2>🔐 Admin Login</h2>
+      <p class="text-light">Enter the admin password to continue</p>
+      <div class="form-group">
+        <input type="password" id="adminPassword" placeholder="Enter password">
+      </div>
+      <button class="btn btn-primary btn-full" id="adminLoginBtn">Login</button>
+      <p class="admin-hint">Default password: admin123</p>
+    </div>
+  </div>
+  <!-- Admin Content -->
+  <div class="admin-content hidden" id="adminContent">
+    <div class="container mt-4">
+      <div class="admin-header">
+        <h2>Admin Dashboard</h2>
+        <button class="btn btn-secondary btn-sm" id="adminLogoutBtn">Logout</button>
+      </div>
+      <!-- Admin Tabs -->
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-admin-tab="dashboard">Dashboard</button>
+        <button class="admin-tab" data-admin-tab="create">Create Tournament</button>
+        <button class="admin-tab" data-admin-tab="manage">Manage Registrations</button>
+        <button class="admin-tab" data-admin-tab="tournaments-manage">Manage Tournaments</button>
+      </div>
+      <!-- Tab: Dashboard -->
+      <div class="admin-section active" id="adminDashboard">
+        <div class="admin-stat-grid">
+          <div class="admin-stat-card">
+            <div class="admin-stat-icon">🏆</div>
+            <div class="admin-stat-number" id="adminStatTournaments">0</div>
+            <div class="admin-stat-label">Total Tournaments</div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="admin-stat-icon">👥</div>
+            <div class="admin-stat-number" id="adminStatTeams">0</div>
+            <div class="admin-stat-label">Total Registrations</div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="admin-stat-icon">✅</div>
+            <div class="admin-stat-number" id="adminStatApproved">0</div>
+            <div class="admin-stat-label">Approved</div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="admin-stat-icon">⏳</div>
+            <div class="admin-stat-number" id="adminStatPending">0</div>
+            <div class="admin-stat-label">Pending</div>
+          </div>
+        </div>
+        <div class="section-header mt-4">
+          <h3>Recent Registrations</h3>
+        </div>
+        <div id="adminRecentRegistrations"></div>
+      </div>
+      <!-- Tab: Create Tournament -->
+      <div class="admin-section" id="adminCreate">
+        <div class="register-card">
+          <h3>Create New Tournament</h3>
+          <form id="createTournamentForm">
+            <div class="form-group">
+              <label for="tName">Tournament Name *</label>
+              <input type="text" id="tName" placeholder="e.g. IT Premier League 2026" required>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="tSport">Sport *</label>
+                <select id="tSport" required>
+                  <option value="">— Select sport —</option>
+                  <option value="football">⚽ Football</option>
+                  <option value="cricket">🏏 Cricket</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="tFee">Registration Fee (₹) *</label>
+                <input type="number" id="tFee" placeholder="e.g. 500" required min="0">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="tDate">Tournament Date *</label>
+                <input type="date" id="tDate" required>
+              </div>
+              <div class="form-group">
+                <label for="tDeadline">Registration Deadline *</label>
+                <input type="date" id="tDeadline" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="tVenue">Venue</label>
+              <input type="text" id="tVenue" placeholder="e.g. College Ground">
+            </div>
+            <div class="form-group">
+              <label for="tDescription">Description</label>
+              <textarea id="tDescription" rows="3" placeholder="Tournament details, rules, etc."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full">Create Tournament</button>
+          </form>
+        </div>
+      </div>
+      <!-- Tab: Manage Registrations -->
+      <div class="admin-section" id="adminManage">
+        <div class="filter-bar">
+          <div class="form-group">
+            <select id="adminFilterTournament">
+              <option value="">All Tournaments</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <select id="adminFilterStatus">
+              <option value="">All Statuses</option>
+              <option value="pending">Pending</option>
+              <option value="approved">Approved</option>
+              <option value="rejected">Rejected</option>
+            </select>
+          </div>
+        </div>
+        <div id="adminRegistrationsList"></div>
+        <div class="empty-state hidden" id="adminRegistrationsEmpty">
+          <span class="empty-icon">📋</span>
+          <p>No registrations found.</p>
+        </div>
+      </div>
+      <!-- Tab: Manage Tournaments -->
+      <div class="admin-section" id="adminTournamentsManage">
+        <div id="adminTournamentsList"></div>
+        <div class="empty-state hidden" id="adminTournamentsEmpty">
+          <span class="empty-icon">🏆</span>
+          <p>No tournaments created yet.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Payment QR Modal -->
+<div class="modal-overlay hidden" id="paymentModal">
+  <div class="modal payment-modal">
+    <div class="modal-header">
+      <h3>💰 Payment Instructions</h3>
+      <button class="modal-close" id="paymentModalClose">✕</button>
+    </div>
+    <div class="modal-body payment-body">
+      <div class="payment-success-icon">✅</div>
+      <h3 class="payment-title">Registration Submitted Successfully!</h3>
+      <p class="payment-subtitle">Now complete the payment to confirm your spot</p>
+      <div class="payment-details">
+        <div class="payment-fee-box">
+          <span class="payment-fee-label">Registration Fee</span>
+          <span class="payment-fee-value" id="paymentFeeValue">₹0</span>
+        </div>
+      </div>
+      <div class="qr-section">
+        <p class="qr-instruction">Scan the QR code below to pay:</p>
+        <div class="qr-image-container">
+          <img class="qr-image" src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=upi%3A%2F%2Fpay%3Fpa%3Dwaniiqbal962-2%40oksbi%26pn%3DIqbal%2520Hameed%26cu%3DINR" alt="UPI Payment QR Code">
+        </div>
+        <div class="upi-details">
+          <p class="upi-name">Iqbal Hameed</p>
+          <p class="upi-id">UPI ID: <strong>waniiqbal962-2@oksbi</strong></p>
+        </div>
+      </div>
+      <div class="payment-steps">
+        <div class="payment-step">
+          <span class="step-number">1</span>
+          <p>Scan the QR code and pay <strong id="paymentStepAmount">₹0</strong></p>
+        </div>
+        <div class="payment-step">
+          <span class="step-number">2</span>
+          <p>Take a <strong>screenshot</strong> of the payment confirmation</p>
+        </div>
+        <div class="payment-step">
+          <span class="step-number">3</span>
+          <p><strong>Upload the screenshot</strong> below as proof of payment</p>
+        </div>
+      </div>
+      <!-- Screenshot Upload Area -->
+      <div class="screenshot-upload-section">
+        <label class="screenshot-upload-label">Upload Payment Screenshot *</label>
+        <div class="screenshot-dropzone" id="screenshotDropzone">
+          <div class="dropzone-content" id="dropzoneContent">
+            <span class="dropzone-icon">📤</span>
+            <p class="dropzone-text">Drag & drop your screenshot here</p>
+            <p class="dropzone-or">or</p>
+            <button type="button" class="btn btn-secondary btn-sm" id="browseScreenshotBtn">Browse Files</button>
+            <p class="dropzone-hint">PNG, JPG, JPEG — Max 5MB</p>
+          </div>
+          <div class="screenshot-preview hidden" id="screenshotPreview">
+            <img id="screenshotPreviewImg" alt="Payment Screenshot">
+            <button type="button" class="screenshot-remove" id="removeScreenshotBtn">✕ Remove</button>
+          </div>
+          <input type="file" id="screenshotInput" accept="image/png,image/jpeg,image/jpg" class="hidden">
+        </div>
+      </div>
+      <div class="payment-note">
+        <span>⚠️</span>
+        <p>Your registration is <strong>Pending</strong> until the admin verifies and approves your payment screenshot.</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary btn-full" id="paymentDoneBtn" disabled>Upload Screenshot to Submit →</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay hidden" id="confirmModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="confirmTitle">Confirm</h3>
+      <button class="modal-close" id="confirmClose">✕</button>
+    </div>
+    <div class="modal-body">
+      <p id="confirmMessage">Are you sure?</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="confirmCancel">Cancel</button>
+      <button class="btn btn-primary" id="confirmOk">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- Supabase JS Client -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app.js"></script>
+</body>
+</html>
