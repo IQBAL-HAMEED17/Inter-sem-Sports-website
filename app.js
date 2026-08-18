@@ -4,7 +4,7 @@ const TOURNAMENTS_KEY = STORE_PREFIX + 'tournaments';
 const REGISTRATIONS_KEY = STORE_PREFIX + 'registrations';
 const ADMIN_LOGGED_IN_KEY = STORE_PREFIX + 'adminLoggedIn';
 
-const generateId = () => Date.now().toString(36) + Math.random().toString(36).substr(2);
+const generateId = () => typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) { var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8); return v.toString(16); });
 const formatDate = (dateStr) => new Date(dateStr).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
 const getSemesterLabel = (num) => {
   const s = ["th", "st", "nd", "rd"];
